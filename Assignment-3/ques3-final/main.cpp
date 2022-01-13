@@ -18,7 +18,7 @@ int main(){
 		close(pfd1[0]);
 		close(pfd2[1]);
 
-		cout<<"This is the parent"<<endl ;
+		//cout<<"This is the parent"<<endl ;
 
 		//char buf1[2048] = "keyboard input to parent" ;
 		char buf1[2048];
@@ -36,20 +36,17 @@ int main(){
 		close(pfd1[1]);
 		close(pfd2[0]);
 
-		cout<<"This is the child "<<endl;
+		dup2(pfd1[0], 0);
+		dup2(pfd2[1], 1);
+
+		close(pfd1[0]);
+		close(pfd2[1]);
+
+		//cout<<"This is the child "<<endl;
 		
-        char buf1[2048];
-        read(pfd1[0], buf1, 2048);
-        cout<<"Child read "<<buf1<<" from parent"<<endl;
-
-        //char buf2[2048] = "Parent Hi";
-        char buf2[2048];
-        cout<<"Child wants input";
-        cin>>buf2;
-        cout<<"Child is sending "<<buf2<<" to parent"<<endl;
-
-        write(pfd2[1], buf2, 2048);
-
+		char *args[] = {(char *)("./p2"), NULL};
+		execv(args[0], args);
+		
 	}
 	return 0;
 }
