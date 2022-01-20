@@ -21,35 +21,37 @@ int main(){
 		cout<<"This is the parent"<<endl ;
 
 		//char buf1[2048] = "keyboard input to parent" ;
-		char buf1[2048];
-		cout<<"Parent wants input"<<endl;
-		cin>>buf1;
-		write(pfd1[1], buf1, 2048);
+		//while(1){
+			char buf1[2048];
+			cout<<"Parent wants input"<<endl;
+			cin>>buf1;
+			write(pfd1[1], buf1, 2048);
 
-		wait(NULL);
+			wait(NULL);
 
-		char buf2[2048];
-		read(pfd2[0], buf2, 2048);
-		cout<<"Parent read "<<buf2<<" from the child"<<endl;
+			char buf2[2048];
+			read(pfd2[0], buf2, 2048);
+			cout<<"Parent read "<<buf2<<" from the child"<<endl;
+		//}
 	}
 	else{
 		close(pfd1[1]);
 		close(pfd2[0]);
 
 		cout<<"This is the child "<<endl;
-		
-        char buf1[2048];
-        read(pfd1[0], buf1, 2048);
-        cout<<"Child read "<<buf1<<" from parent"<<endl;
+		//while(1){
+			char buf1[2048];
+			read(pfd1[0], buf1, 2048);
+			cout<<"Child read "<<buf1<<" from parent"<<endl;
 
-        //char buf2[2048] = "Parent Hi";
-        char buf2[2048];
-        cout<<"Child wants input";
-        cin>>buf2;
-        cout<<"Child is sending "<<buf2<<" to parent"<<endl;
+			//char buf2[2048] = "Parent Hi";
+			char buf2[2048];
+			cout<<"Child wants input";
+			cin>>buf2;
+			cout<<"Child is sending "<<buf2<<" to parent"<<endl;
 
-        write(pfd2[1], buf2, 2048);
-
+			write(pfd2[1], buf2, 2048);
+		//}
 	}
 	return 0;
 }

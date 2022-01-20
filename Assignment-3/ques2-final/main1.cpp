@@ -54,7 +54,7 @@ int main(){
 
 		dup2(pfd2[0], 0);
 		dup2(pfd1[1], 1);
-
+		
 		close(pfd2[0]);
 		close(pfd1[1]);
 
