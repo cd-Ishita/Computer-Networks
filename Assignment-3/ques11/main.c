@@ -22,6 +22,7 @@ int main(){
 		close(pfd2[0]);
 
 		char buf1[2048] = "Hello From Parent";
+		scanf("%[^\n]s", buf1);
 		write(pfd2[1], buf1, 2048);
 
 		printf("Parent is sending %s to pipe\n", buf1);

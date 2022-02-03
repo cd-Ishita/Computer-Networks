@@ -61,6 +61,7 @@ int main(){
     sa1.sa_sigaction = get_pid1;
     sigaction(SIGUSR2, &sa1, NULL);
 
+    setpgid(0, 0);
     //setpgid(pid, pid_t pgid);
     struct msg msq4;
     msgrcv(msqid,&msq4,2048,18,0);
@@ -71,8 +72,8 @@ int main(){
         i++;
     }
     
-    setpgid(pid, 0);
-
+    setpgid(pid, getgid());
+    printf("%d\n", pid);
     struct msg msq5;
     msgrcv(msqid,&msq5,2048,18,0);
 
@@ -82,8 +83,8 @@ int main(){
         i++;
     }
     
-    setpgid(pid, 0);
-    
+    setpgid(pid, getgid());
+    printf("%d\n", pid);
     struct msg msq6;
     msgrcv(msqid,&msq6,2048,18,0);
 
@@ -93,18 +94,9 @@ int main(){
         i++;
     }
     
-    setpgid(pid, 0);
-    
-    struct msg msq7;
-    msgrcv(msqid,&msq7,2048,18,0);
+    setpgid(pid, getgid());
+    printf("%d\n", pid);
 
-    i=0, pid=0;
-    while(msq7.buf[i] != '\0'){
-        pid = pid*10 + (int)msq7.buf[i] - 48;
-        i++;
-    }
-    
-    setpgid(pid, 0);
 
     struct msg msq1;
     msq1.type=2;
@@ -126,7 +118,7 @@ int main(){
 
 
     //P1 sends a SIGUSR2 signal to the group
-    killpg(getpid(), SIGUSR2);
+    killpg(getgid(), SIGUSR2);
     
     sleep(10);
 }

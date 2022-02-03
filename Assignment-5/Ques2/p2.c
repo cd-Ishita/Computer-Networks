@@ -19,6 +19,6 @@ int main(){
     write(fd, buf, 2048);
 
 
-    close(fd);
-    unlink("FIFO1");
+    //close(fd);
+    //unlink("FIFO1");
 }

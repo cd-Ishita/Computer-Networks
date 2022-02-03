@@ -18,9 +18,6 @@ int main(){
 		close(pfd1[0]);
 		close(pfd2[1]);
 
-		//cout<<"This is the parent"<<endl ;
-
-		//char buf1[2048] = "keyboard input to parent" ;
 		char buf1[2048];
 		cout<<"Parent wants input"<<endl;
 		cin>>buf1;
@@ -41,8 +38,6 @@ int main(){
 
 		close(pfd1[0]);
 		close(pfd2[1]);
-
-		//cout<<"This is the child "<<endl;
 		
 		char *args[] = {(char *)("./p2"), NULL};
 		execv(args[0], args);
