@@ -9,15 +9,14 @@
 #include<iostream>
 using namespace std;
 int main(){
-	cout<<"byeeeee";
 	char buf1[2048] = "hello from child";
 
 	write(1, buf1, 2048);
-	cout<<"Child is writing "<<buf1<<" to pipe";
+	printf("Child is writing %s to pipe", buf1);
 
 	char buf2[2048];
 	read(0, buf2, 2048);
-	cout<<"Child has read "<<buf2<<" from pipe";
+	printf("Child has read %s from pipe", buf2);
 
 	return 0;
 }

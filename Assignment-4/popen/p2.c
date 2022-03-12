@@ -8,10 +8,9 @@
 #include<sys/wait.h>
 int main(){
 
-
     char buf[2048];
     printf("Child wants input");
-    scanf( "%s", buf);
+    scanf("%s", buf);
 
     write(1,buf,2048) ;
     printf("Child sends %s\n", buf);

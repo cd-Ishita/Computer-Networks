@@ -1,4 +1,3 @@
-//compile with -lpthread -lrt
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -24,8 +23,4 @@ int main(){
         char *args[] = {"./test", NULL};
         execv(args[0], args);
     }
-
-    
-
-
 }

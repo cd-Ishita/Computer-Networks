@@ -7,33 +7,31 @@
 #include<fcntl.h>
 #include<unistd.h>
 #include<sys/wait.h>
-#include<iostream>
-using namespace std;
 int main(){
 	int pfd1[2], pfd2[2];
 	pipe(pfd1);
 	pipe(pfd2);
 
 	int c;
-	cout<<"This is the main process"<<endl;
+	printf("This is the main process\n");
 
 	c = fork();
 	if(c > 0){
-		cout<<"This is the parent process"<<endl;
+		printf("This is the parent process\n");
 		close(pfd1[1]);
 		close(pfd2[0]);
 
 		char buf1[2048] = "Hello From Parent";
 		write(pfd2[1], buf1, 2048);
 
-		cout<<"Parent is sending "<<buf1<<" to pipe\n";
+		printf("Parent is sending %s to pipe\n", buf1);
 
 		wait(NULL);
 
 		char buf2[2048];
 		read(pfd1[0], buf2, 2048);
 
-		cout<<"Parent read "<<buf2<<" from pipe\n";
+		printf("Parent read %s from pipe\n", buf2);
 	}
 	else{
 		close(pfd1[0]);
@@ -49,7 +47,7 @@ int main(){
 		execv(args[0], args);
 	}
 	//wait(NULL);
-	cout<<"Child process has ended, only parent is here\n";
+	printf("Child process has ended, only parent is here\n");
 
 	return 0;
 }

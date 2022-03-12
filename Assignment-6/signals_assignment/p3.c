@@ -23,13 +23,11 @@ int main(){
     //P3 gets executed, and it sends a message containing its pid as p3pid
     struct msg msq;
     msq.type=3;
-        
     
     sprintf(msq.buf, "%d", getpid());
     printf("Message sending: %s\n", msq.buf);
     msgsnd(msqid,&msq,2048,0);
     //msg(msqid, IPC_RMID, NULL) ;
-
 
     //P3 catches the signal and it finds out who has sent that signal to it
     struct sigaction sa;

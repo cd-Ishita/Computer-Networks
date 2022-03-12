@@ -13,12 +13,12 @@ int main(){
 
     int fd = open("FIFO2", O_WRONLY);
     sleep(2);
-    char buf[2048];
-    printf("Process 3 asks input: ");
-    scanf("%s", buf);
+    char buf[2048] = "process 3";
+    //printf("Process 3 asks input: ");
+    //scanf("%s", buf);
     write(fd, buf, 2048);
-
 
     close(fd);
     unlink("FIFO2");
+
 }

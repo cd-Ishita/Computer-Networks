@@ -1,4 +1,4 @@
-#include <stdio.h>get
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
@@ -13,8 +13,6 @@
 
 #define PORT "3490"  // the port users will be connecting to
 
-#define BACKLOG 10   // how many pending connections queue will hold
-
 void sigchld_handler(int s){
     // waitpid() might overwrite errno, so we save and restore it:
     int saved_errno = errno;
@@ -25,59 +23,44 @@ void sigchld_handler(int s){
 }
 
 
-// get sockaddr, IPv4 or IPv6:
-/*
-void *get_in_addr(struct sockaddr *sa){
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
-}
-*/
 int main(void){
     
-    struct addrinfo hints;
-    
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE; // use my IP
+    int sfd;
+    int port_num;
+    struct sockaddr_in address;
 
-    int rv, sfd;
-    struct addrinfo *servinfo;
+    //configure to take this info from config file
+    port_num = 6060;
+    int opt = 1;
+    int addrlen = sizeof(address);
     
-    if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 1;
+    // Creating socket file descriptor
+    if ((sfd = socket(AF_INET, SOCK_STREAM, 0)) == 0){
+        perror("socket failed");
+        exit(EXIT_FAILURE);
     }
-
-    struct addrinfo *p;
     
-    // loop through all the results and bind to the first we can
-    for(p = servinfo; p != NULL; p = p->ai_next) {
-        if ((sfd = socket(p->ai_family, p->ai_socktype,
-                p->ai_protocol)) == -1) {
-            perror("server: socket");
-            continue;
-        }
-
-        int yes = 1;
-        if (setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, &yes,
-                sizeof(int)) == -1) {
-            perror("setsockopt");
-            exit(1);
-        }
-
-        if (bind(sfd, p->ai_addr, p->ai_addrlen) == -1) {
-            close(sfd);
-            perror("server: bind");
-            continue;
-        }
-
-        break;
+    // Forcefully attaching socket to the port 8080
+    if (setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))){
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
     }
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(port_num[i]);
+    
+    // Forcefully attaching socket to the port 8080
+    if (bind(sfd, (struct sockaddr *)&address, sizeof(address))<0){
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+    if (listen(sfd, 5) < 0){
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+    printf("sfd%d is listening for connections\n", i+1);
 
+    // Find IP Address
     struct sockaddr_in address;
     int address_len = sizeof(address);
     int x = getsockname(sfd, &address, &address_len);
@@ -87,28 +70,6 @@ int main(void){
 
 
     //Now accept
-
-    if (p == NULL)  {
-        fprintf(stderr, "server: failed to bind\n");
-        exit(1);
-    }
-
-    if (listen(sfd, BACKLOG) == -1) {
-        perror("listen");
-        exit(1);
-    }
-    /*
-    struct sigaction sa;
-    sa.sa_handler = sigchld_handler; // reap all dead processes
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-        perror("sigaction");
-        exit(1);
-    }
-*/
-    printf("Server: waiting for connections...\n");
-
     struct sockaddr_storage client_address; // connector's address information
     socklen_t sin_size;
     int new_fd; //new connection
@@ -165,7 +126,6 @@ int main(void){
         close(new_fd);  // parent doesn't need this
     }
 
-    freeaddrinfo(servinfo); // all done with this structure
 
     return 0;
 }

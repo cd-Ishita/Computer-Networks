@@ -12,12 +12,11 @@ int main(){
     mkfifo("green", 0666);
 
     int fd = open("green", O_WRONLY);
-    sleep(5);
+    //sleep(5);
     char buf[2048];
     printf("Child asks input: ");
     scanf("%s", buf);
     write(fd, buf, 2048);
-
-    printf("Parent read");
+    printf("Child sent data to Parent");
 
 }

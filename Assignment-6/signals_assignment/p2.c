@@ -8,7 +8,6 @@
 #include <unistd.h>
 struct msg{
     long type ;
-    //int sz ;
     char buf[2048];
 };
 

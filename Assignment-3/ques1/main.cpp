@@ -4,6 +4,8 @@
 #include<fcntl.h>
 #include<unistd.h>
 #include<sys/wait.h>
+#include<iostream>
+using namespace std;
 int main(){
 
 	int pfd1[2], pfd2[2];

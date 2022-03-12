@@ -10,6 +10,7 @@ int main(){
     int pfd1[2], pfd2[2];
     pipe(pfd1);
     pipe(pfd2);
+    
     int c = fork();
 
     if(c>0){
@@ -31,15 +32,17 @@ int main(){
         printf("P1 read %s from pipe\n", buf1);
     }
     else{
+        printf("This is child process\n");
         close(pfd2[0]);
         close(pfd1[1]);
 
-        dup2(pfd1[0], 0);
-        dup2(pfd2[1], 1);
+        dup2(pfd1[0],0);
+        dup2(pfd2[1],1);
 
         close(pfd1[0]);
         close(pfd2[1]);
+        
         char *args[] = {(char *)("./p2"), NULL};
-        execv("./p2", args);
+        execvp(args[0], args);
     }
 }

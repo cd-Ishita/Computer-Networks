@@ -14,8 +14,14 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<unistd.h>
-int main(){
+struct thread_args{
+    int nsfd;
+    int id;
+};
 
+
+int main(){
+    //------------ socket initialisation -------------------
     //Open 4 sfd
     // First 3 sfd are TCP
     // last sfd is UDP
@@ -100,6 +106,7 @@ int main(){
     int timeout = (3 * 60 * 1000);
     int connections = 0;
     while(connections != num){
+        printf("bye");
         int rc = poll(fds, num, timeout);
         if(rc < 0){
             perror("poll failed");
@@ -117,6 +124,7 @@ int main(){
             if(fds[i].revents & POLLIN){
                 connections++;
                 if(i == num-1){
+                    // UDP accept connection
                     char buffer[2048];
                     struct sockaddr_in cliaddr;
                     int len = sizeof(cliaddr);
@@ -127,6 +135,7 @@ int main(){
                     printf("Message for sfd%d is %s\n", i, buffer);
                 }
                 else{
+                    //TCP accept connection
                     int addrlen = sizeof(address[i]);
                     if((nsfd[i] = accept(sfd[i], (struct sockaddr *)&address[i], (socklen_t*)&addrlen))<0){
                         perror("accept");
@@ -136,6 +145,7 @@ int main(){
                     read(nsfd[i], buffer, 1024);
                     printf("Message for sfd%d is %s\n", i, buffer);
                     //read and fork and all that
+                    
                 }
             }
         }

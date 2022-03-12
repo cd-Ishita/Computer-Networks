@@ -22,8 +22,7 @@ int main(){
     int timeout;
     
     printf("Hi");
-    while(1){
-        fds[0].fd = fd1;
+    fds[0].fd = fd1;
         fds[0].events = 0; //just to clear any previous events
         fds[0].events |= POLLIN;
         fds[0].revents = 0;
@@ -37,14 +36,16 @@ int main(){
         fds[2].events = 0; //just to clear any previous events
         fds[2].events |= POLLIN;
         fds[2].revents = 0;
+    while(1){
+        
 
         timeout = 5000; //in milliseconds
         int pret = poll(fds, 3, timeout);
 
         if(pret == 0){
             printf("No input so timeout\n");
+            break;
         }
-        else if(pret > 0){
             printf("Hello input is given\n");
             if(fds[0].revents & POLLIN){
                 char buf[2048];
@@ -75,7 +76,7 @@ int main(){
 
                 fds[2].revents = 0;
             }   
-        }
+        
     }
 
 }

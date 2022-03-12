@@ -13,15 +13,17 @@ int main(){
 
     int c = fork();
     if(c > 0){
-        int fd = open("green", O_WRONLY);
+        int fd = open("green", O_RDWR);
         //sleep(5);
-        printf("Parent wants input");
+        printf("Parent wants input: \n");
         char buf[2048];
         scanf("%s", buf);
         write(fd, buf, 2048);
 
-        //printf("Parent read %s\n", buf);
+        sleep(10);
 
+        read(fd, buf, 2048);
+        printf("Parent read %s\n", buf);
         close(fd);
         unlink("green");
     }
